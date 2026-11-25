@@ -1,0 +1,1841 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dokumenty i Karta - Projekt Informatyka</title>
+  <style>
+    :root {
+      --bg-color: #0b0d10;
+      --card-bg: #181a1f;
+      --btn-circle-bg: #22262e;
+      --text-main: #ffffff;
+      --text-muted: #9ca3af;
+      --accent-blue: #2492e8;
+      --accent-sky: #60c5f8;
+      --accent-green: #22c55e;
+      --accent-amber: #f59e0b;
+      --border-color: #252830;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #050607;
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 420px;
+      background-color: var(--bg-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 84px;
+      position: relative;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.85);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* ================= EKRAN 1: DOKUMENTY ================= */
+    .docs-header {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 18px;
+      padding: 18px 20px 8px;
+      color: #e5e7eb;
+      font-size: 20px;
+    }
+
+    .docs-header span {
+      cursor: pointer;
+    }
+
+    .docs-title {
+      font-size: 32px;
+      font-weight: 700;
+      padding: 6px 20px 22px;
+      letter-spacing: -0.4px;
+    }
+
+    .doc-tile-wrapper {
+      padding: 0 20px;
+    }
+
+    .blue-doc-card {
+      width: 100%;
+      height: 215px;
+      border-radius: 18px;
+      background:
+        repeating-radial-gradient(circle at 82% 52%, transparent 0, transparent 15px, rgba(255, 255, 255, 0.11) 16px, transparent 17px),
+        linear-gradient(125deg, #1d6fe8 0%, #2492e8 55%, #38bdf8 100%);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 12px 24px rgba(29, 111, 232, 0.25);
+      transition: transform 0.15s ease;
+    }
+
+    .blue-doc-card:active {
+      transform: scale(0.985);
+    }
+
+    .blue-doc-card-title {
+      font-size: 21px;
+      font-weight: 700;
+      color: #ffffff;
+      position: relative;
+      z-index: 2;
+    }
+
+    .blue-card-mark {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #ffffff;
+      z-index: 2;
+    }
+
+    .blue-card-check {
+      position: absolute;
+      top: 40px;
+      right: 10px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background-color: var(--accent-green);
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3;
+      border: 2px solid #2492e8;
+    }
+
+    .customize-link {
+      display: inline-block;
+      margin: 16px 20px 0;
+      color: var(--accent-sky);
+      font-size: 15px;
+      font-weight: 600;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .add-doc-container {
+      margin-top: auto;
+      padding: 28px 20px 16px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .btn-add-doc {
+      background-color: var(--accent-sky);
+      color: #07131d;
+      border: none;
+      border-radius: 16px;
+      padding: 14px 22px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 6px 18px rgba(96, 197, 248, 0.25);
+    }
+
+    /* ================= EKRAN 2: SZCZEGÓŁY KARTY ================= */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .top-bar .back-btn {
+      background: none;
+      border: none;
+      color: var(--accent-sky);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .top-bar h1 {
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .help-circle-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background-color: transparent;
+      color: #e5e7eb;
+      border: 2px solid #e5e7eb;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.15s ease, background-color 0.15s ease;
+    }
+
+    .help-circle-btn:hover {
+      transform: scale(1.06);
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .live-time {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 10px 0;
+    }
+
+    .combined-card-wrapper {
+      margin: 0 24px 20px;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+      background-color: var(--card-bg);
+    }
+
+    .id-card {
+      margin: 0;
+      background:
+        radial-gradient(circle at 82% 58%, rgba(255, 255, 255, 0.65) 0%, rgba(224, 242, 254, 0.25) 48%, transparent 72%),
+        repeating-radial-gradient(circle at 82% 55%, transparent 0, transparent 15px, rgba(148, 184, 212, 0.14) 16px, transparent 17px),
+        linear-gradient(155deg, #eef6fc 0%, #e3eff9 52%, #d8e8f6 100%);
+      color: #0f172a;
+      border-radius: 0;
+      padding: 16px 16px 24px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card-layout {
+      display: grid;
+      grid-template-columns: 112px 1fr;
+      gap: 14px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .left-column {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .avatar-box {
+      width: 112px;
+      height: 142px;
+      background-color: #cbd5e1;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      color: #475569;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+
+    .avatar-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(100%) contrast(1.05);
+    }
+
+    .flag-wrapper {
+      width: 74px;
+      height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      background: transparent;
+    }
+
+    #waving-flag {
+      width: 74px;
+      height: 46px;
+      display: block;
+      filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.14));
+    }
+
+    /* Sekcja wzorowana na obrazku: godło po lewej + dwuwierszowy napis "Karta m3" obok */
+    .emblem-title-banner {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 8px;
+      border-radius: 12px;
+      background:
+        repeating-linear-gradient(
+          -18deg,
+          rgba(255, 255, 255, 0.24) 0px,
+          rgba(255, 255, 255, 0.24) 12px,
+          rgba(186, 216, 240, 0.14) 12px,
+          rgba(186, 216, 240, 0.14) 24px
+        );
+      position: relative;
+      z-index: 2;
+    }
+
+    .holo-crest-wrap {
+      width: 58px;
+      height: 68px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      filter: drop-shadow(0 2px 6px rgba(15, 23, 42, 0.18));
+      transition: transform 0.15s ease;
+    }
+
+    .holo-crest-wrap:hover {
+      transform: scale(1.04);
+    }
+
+    .holo-crest-svg {
+      width: 58px;
+      height: 68px;
+      display: block;
+      overflow: visible;
+    }
+
+    .holo-stop-1 {
+      stop-color: #fb923c;
+      stop-opacity: 0.92;
+    }
+    .holo-stop-2 {
+      stop-color: #facc15;
+      stop-opacity: 0.92;
+    }
+    .holo-stop-3 {
+      stop-color: #4ade80;
+      stop-opacity: 0.92;
+    }
+    .holo-stop-4 {
+      stop-color: #38bdf8;
+      stop-opacity: 0.95;
+    }
+    .holo-stop-5 {
+      stop-color: #f472b6;
+      stop-opacity: 0.92;
+    }
+    .holo-stop-6 {
+      stop-color: #c084fc;
+      stop-opacity: 0.92;
+    }
+
+    .emblem-title-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2px;
+      color: #0f172a;
+      font-size: 22px;
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -0.2px;
+    }
+
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 12px;
+      padding-top: 2px;
+    }
+
+    .field .value {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      color: #0f172a;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .field .label {
+      font-size: 12px;
+      color: #475569;
+      margin-top: 2px;
+    }
+
+    .status-banner {
+      margin: 0;
+      background-color: var(--card-bg);
+      padding: 15px 18px;
+      border-radius: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--accent-green);
+    }
+
+    .status-banner.locked {
+      color: var(--accent-amber);
+    }
+
+    .status-dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid currentColor;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 0 12px 20px;
+      text-align: center;
+    }
+
+    .action-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .action-circle {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background-color: var(--btn-circle-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-sky);
+      transition: transform 0.15s, background-color 0.2s;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .action-item:hover .action-circle {
+      background-color: #2b303a;
+      transform: translateY(-2px);
+    }
+
+    .action-item:active .action-circle {
+      transform: scale(0.95);
+    }
+
+    .mini-card-icon {
+      width: 26px;
+      height: 17px;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #b8c7f8 0%, #d8c2f0 48%, #f7b2d9 100%);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+      padding: 2px 3px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+
+    .mini-card-crest {
+      font-size: 7px;
+      line-height: 1;
+      color: #ffffff;
+      text-shadow: 0 0 2px rgba(255, 255, 255, 0.85);
+    }
+
+    .action-label {
+      font-size: 12px;
+      line-height: 1.25;
+      color: #e5e7eb;
+      font-weight: 500;
+      white-space: pre-line;
+    }
+
+    .info-box {
+      margin: 0 16px 14px;
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      padding: 16px 18px;
+    }
+
+    .serial-top-block {
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .copy-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+      gap: 10px;
+    }
+
+    .serial-number {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+    }
+
+    .btn-copy {
+      background-color: #152538;
+      color: #60b5f6;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .detail-stack-row {
+      padding: 13px 0;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .detail-stack-row:last-child {
+      border-bottom: none;
+      padding-bottom: 2px;
+    }
+
+    .detail-stack-label {
+      font-size: 13px;
+      color: #9ca3af;
+      font-weight: 400;
+    }
+
+    .detail-inline-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid transparent;
+      color: #f3f4f6;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 1px 0;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+
+    .detail-inline-input:focus {
+      border-bottom-color: var(--accent-sky);
+    }
+
+    .accordion-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 16px;
+      color: #f3f4f6;
+    }
+
+    .accordion-content {
+      margin-top: 14px;
+    }
+
+    .data-row {
+      padding: 13px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .data-row:last-child {
+      border-bottom: none;
+      padding-bottom: 2px;
+    }
+
+    .data-row .d-label {
+      font-size: 13px;
+      color: #9ca3af;
+      margin-bottom: 4px;
+    }
+
+    .data-row .d-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: #f3f4f6;
+    }
+
+    /* ================= MODALE ================= */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.82);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      padding: 16px;
+    }
+
+    .modal-box {
+      background-color: var(--card-bg);
+      width: 100%;
+      max-width: 400px;
+      border-radius: 18px;
+      padding: 20px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border: 1px solid var(--border-color);
+    }
+
+    .modal-box h2 {
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+
+    .modal-section-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--accent-sky);
+      margin: 14px 0 8px;
+      letter-spacing: 0.6px;
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="file"] {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-size: 14px;
+    }
+
+    .paste-zone {
+      border: 1px dashed var(--accent-sky);
+      border-radius: 10px;
+      padding: 10px;
+      background-color: var(--bg-color);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .paste-zone-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .btn-mini-clear {
+      align-self: flex-start;
+      background-color: #262b34;
+      color: #e5e7eb;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .btn-save {
+      flex: 1;
+      background-color: var(--accent-sky);
+      color: #07131d;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-cancel {
+      flex: 1;
+      background-color: #2d323b;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .action-modal-body {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #d1d5db;
+      margin-bottom: 16px;
+    }
+
+    .verify-code-box {
+      background-color: var(--bg-color);
+      border: 1px dashed var(--accent-sky);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      color: var(--accent-sky);
+      margin: 12px 0;
+    }
+
+    .shortcut-btn {
+      width: 100%;
+      text-align: left;
+      background-color: var(--bg-color);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* ================= DOLNA NAWIGACJA ================= */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 420px;
+      background-color: #0f1216;
+      border-top: 1px solid #1e232b;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 8px 6px 10px;
+      z-index: 50;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 11px;
+      color: #cbd5e1;
+      gap: 4px;
+      cursor: pointer;
+      min-width: 60px;
+    }
+
+    .nav-pill {
+      width: 54px;
+      height: 28px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #e2e8f0;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .nav-item.active .nav-pill {
+      background-color: #162a4a;
+      color: #60a5fa;
+    }
+
+    .nav-item.active {
+      color: #60a5fa;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- WIDOK 1: DOKUMENTY -->
+  <div id="view-docs">
+    <div class="docs-header">
+      <span onclick="openShortcutsModal()" title="Więcej">⚫</span>
+    </div>
+
+    <div class="docs-title" id="disp-docs-title">Dokumenty</div>
+
+    <div class="doc-tile-wrapper">
+      <div class="blue-doc-card" onclick="showCardView()">
+        <div class="blue-doc-card-title" id="disp-blue-card-title">Karta</div>
+        <div class="blue-card-mark">📄</div>
+        <div class="blue-card-check">✓</div>
+      </div>
+    </div>
+
+    <button class="customize-link" onclick="openModal()">Dostosuj widok</button>
+
+    <div class="add-doc-container">
+      <button class="btn-add-doc" onclick="openModal()">
+        <span>+</span>
+        <span>Dodaj dokument</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- WIDOK 2: SZCZEGÓŁY KARTY -->
+  <div id="view-card" class="hidden">
+    <header class="top-bar">
+      <button class="back-btn" onclick="showDocsView()">❮ Wróć</button>
+      <h1 id="disp-header-title">Karta</h1>
+      <button class="help-circle-btn" onclick="openModal()" title="Edytuj">?</button>
+    </header>
+
+    <div class="live-time" id="clock">Czas: ładowanie...</div>
+
+    <div class="combined-card-wrapper">
+      <section class="id-card">
+        <div class="card-layout">
+          <div class="left-column">
+            <div class="avatar-box" id="avatar-container">👤</div>
+
+            <div class="flag-wrapper">
+              <canvas id="waving-flag" width="148" height="92"></canvas>
+            </div>
+          </div>
+
+          <div class="right-column">
+            <div class="field">
+              <div class="value" id="disp-name">JAN</div>
+              <div class="label" id="disp-lbl-name">Imię (Imiona)</div>
+            </div>
+            <div class="field">
+              <div class="value" id="disp-surname">KOWALSKI</div>
+              <div class="label" id="disp-lbl-surname">Nazwisko</div>
+            </div>
+            <div class="field">
+              <div class="value" id="disp-group">SEKCJA WEB</div>
+              <div class="label" id="disp-lbl-group">Sekcja projektu</div>
+            </div>
+            <div class="field">
+              <div class="value" id="disp-date">15.09.2008</div>
+              <div class="label" id="disp-lbl-date">Data dołączenia</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sekcja wzorowana na zdjęciu: godło po lewej + napis "Karta m3" obok -->
+        <div class="emblem-title-banner">
+          <div class="holo-crest-wrap" id="crest-slot" onclick="triggerCrestUpload()" title="Kliknij, aby wgrać zdjęcie do godła, lub wklej obraz (Ctrl+V)">
+            <svg class="holo-crest-svg" viewBox="0 0 60 70" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <path id="emblemShieldPath" d="M2 2 H58 V27 C58 38.5 44 45.5 30 67 C16 45.5 2 38.5 2 27 Z" />
+                <clipPath id="emblemShieldClip">
+                  <use href="#emblemShieldPath" />
+                </clipPath>
+
+                <linearGradient id="holoCrestGrad" x1="0%" y1="0%" x2="100%" y2="100%" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" class="holo-stop-1" />
+                  <stop offset="22%" class="holo-stop-2" />
+                  <stop offset="45%" class="holo-stop-3" />
+                  <stop offset="68%" class="holo-stop-4" />
+                  <stop offset="85%" class="holo-stop-5" />
+                  <stop offset="100%" class="holo-stop-6" />
+                  <animateTransform
+                    attributeName="gradientTransform"
+                    type="translate"
+                    values="-26 -16; 26 16; -26 -16"
+                    dur="4.5s"
+                    repeatCount="indefinite" />
+                </linearGradient>
+              </defs>
+
+              <g clip-path="url(#emblemShieldClip)">
+                <rect x="0" y="0" width="60" height="70" fill="url(#holoCrestGrad)" />
+                <image
+                  id="crest-user-img"
+                  x="0"
+                  y="0"
+                  width="60"
+                  height="70"
+                  preserveAspectRatio="xMidYMid slice"
+                  style="display: none;" />
+              </g>
+            </svg>
+          </div>
+
+          <div class="emblem-title-text" id="disp-emblem-title">
+            <span>Karta</span>
+            <span>m3</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="status-banner" id="status-banner">
+        <div class="status-dot" id="status-dot">✓</div>
+        <span id="disp-status">Karta aktywna</span>
+      </div>
+    </div>
+
+    <section class="quick-actions">
+      <div class="action-item" onclick="openVerifyModal()">
+        <div class="action-circle">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8"></path>
+            <path d="M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8"></path>
+            <path d="M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16"></path>
+            <path d="M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16"></path>
+            <polyline points="15.5 9.5 10.5 14.5 8.5 12.5"></polyline>
+          </svg>
+        </div>
+        <div class="action-label" id="disp-act-1">Potwierdź
+dane</div>
+      </div>
+
+      <div class="action-item" onclick="openCardInfoModal()">
+        <div class="action-circle">
+          <div class="mini-card-icon">
+            <span class="mini-card-crest" id="disp-mini-card-symbol">✦</span>
+          </div>
+        </div>
+        <div class="action-label" id="disp-act-2">Szczegóły
+karty</div>
+      </div>
+
+      <div class="action-item" onclick="toggleCardLock()">
+        <div class="action-circle">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4.5 3.5h15v7.8c0 5.3-3.2 9.4-7.5 11-4.3-1.6-7.5-5.7-7.5-11V3.5z"></path>
+            <rect x="9.2" y="12" width="5.6" height="4.4" rx="1"></rect>
+            <path d="M13.6 12V9.8a1.6 1.6 0 0 0-3.2 0v.7"></path>
+          </svg>
+        </div>
+        <div class="action-label" id="disp-act-3">Zablokuj
+kartę</div>
+      </div>
+
+      <div class="action-item" onclick="openShortcutsModal()">
+        <div class="action-circle">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="5.5" cy="12" r="2.2"></circle>
+            <circle cx="12" cy="12" r="2.2"></circle>
+            <circle cx="18.5" cy="12" r="2.2"></circle>
+          </svg>
+        </div>
+        <div class="action-label" id="disp-act-4">Pozostałe
+skróty</div>
+      </div>
+    </section>
+
+    <section class="info-box">
+      <div class="serial-top-block">
+        <div style="font-size: 13px; color: var(--text-muted);" id="disp-lbl-serial">Numer identyfikacyjny karty</div>
+        <div class="copy-row">
+          <span class="serial-number" id="disp-serial">KLAB 84920</span>
+          <button class="btn-copy" id="copy-btn" onclick="copyId()">Kopiuj</button>
+        </div>
+      </div>
+
+      <div class="detail-stack-row">
+        <label class="detail-stack-label" for="quick-col-1" id="qlbl-1">Oddział</label>
+        <input type="text" class="detail-inline-input" id="quick-col-1" oninput="handleQuickColInput(1, this.value)">
+      </div>
+      <div class="detail-stack-row">
+        <label class="detail-stack-label" for="quick-col-2" id="qlbl-2">Pracownia</label>
+        <input type="text" class="detail-inline-input" id="quick-col-2" oninput="handleQuickColInput(2, this.value)">
+      </div>
+      <div class="detail-stack-row">
+        <label class="detail-stack-label" for="quick-col-3" id="qlbl-3">Opiekun</label>
+        <input type="text" class="detail-inline-input" id="quick-col-3" oninput="handleQuickColInput(3, this.value)">
+      </div>
+      <div class="detail-stack-row">
+        <label class="detail-stack-label" for="quick-col-4" id="qlbl-4">Ważna do</label>
+        <input type="text" class="detail-inline-input" id="quick-col-4" oninput="handleQuickColInput(4, this.value)">
+      </div>
+    </section>
+
+    <section class="info-box">
+      <div class="accordion-header" onclick="toggleDetails()">
+        <span id="disp-accordion-title">Twoje dodatkowe dane</span>
+        <span id="arrow">▲</span>
+      </div>
+      <div class="accordion-content" id="details-panel">
+        <div class="data-row">
+          <div class="d-label" id="disp-det-b1-lbl">Oddział</div>
+          <div class="d-value" id="disp-det-b1-val">WARSZAWA</div>
+        </div>
+        <div class="data-row">
+          <div class="d-label" id="disp-det-b2-lbl">Pracownia</div>
+          <div class="d-value" id="disp-det-b2-val">SALA 104</div>
+        </div>
+        <div class="data-row">
+          <div class="d-label" id="disp-det-b3-lbl">Opiekun</div>
+          <div class="d-value" id="disp-det-b3-val">MGR A. NOWAK</div>
+        </div>
+        <div class="data-row">
+          <div class="d-label" id="disp-det-b4-lbl">Ważna do</div>
+          <div class="d-value" id="disp-det-b4-val">30.06.2027</div>
+        </div>
+        <div class="data-row">
+          <div class="d-label" id="disp-det-b5-lbl">Poziom uprawnień</div>
+          <div class="d-value" id="disp-det-b5-val">PEŁNY DOSTĘP</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- DOLNY PASEK NAWIGACJI -->
+  <nav class="bottom-nav">
+    <div class="nav-item active" id="nav-docs" onclick="showDocsView()">
+      <div class="nav-pill">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <rect x="6" y="3" width="12" height="2.2" rx="1"></rect>
+          <rect x="4.5" y="6.5" width="15" height="2.2" rx="1"></rect>
+          <rect x="3" y="10" width="18" height="11" rx="2.5"></rect>
+        </svg>
+      </div>
+      <span>Dokumenty</span>
+    </div>
+
+    <div class="nav-item" id="nav-services" onclick="showCardView()">
+      <div class="nav-pill">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"></path>
+          <path d="M3 10h18"></path>
+        </svg>
+      </div>
+      <span>Usługi</span>
+    </div>
+
+    <div class="nav-item" onclick="openVerifyModal()">
+      <div class="nav-pill">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8"></path>
+          <path d="M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8"></path>
+          <path d="M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16"></path>
+          <path d="M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16"></path>
+          <line x1="9" y1="9" x2="9" y2="15"></line>
+          <line x1="12" y1="8" x2="12" y2="16"></line>
+          <line x1="15" y1="9" x2="15" y2="15"></line>
+        </svg>
+      </div>
+      <span>Kod QR</span>
+    </div>
+
+    <div class="nav-item" onclick="openModal()">
+      <div class="nav-pill">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="6.5"></circle>
+          <line x1="16" y1="16" x2="21" y2="21"></line>
+        </svg>
+      </div>
+      <span>Szukaj</span>
+    </div>
+
+    <div class="nav-item" onclick="openShortcutsModal()">
+      <div class="nav-pill">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M7.5 4.5a2.2 2.2 0 0 0-3.5 1.8c0 2.1 3.5 4.2 3.5 4.2s3.5-2.1 3.5-4.2a2.2 2.2 0 0 0-3.5-1.8z"></path>
+          <circle cx="16.5" cy="7.5" r="3"></circle>
+          <circle cx="7.5" cy="16.5" r="3"></circle>
+          <rect x="13.8" y="13.8" width="5.4" height="5.4" rx="1.4"></rect>
+        </svg>
+      </div>
+      <span>Więcej</span>
+    </div>
+  </nav>
+</div>
+
+<!-- OKNO AKCJI -->
+<div class="modal-overlay hidden" id="action-modal">
+  <div class="modal-box">
+    <h2 id="action-modal-title">Akcja</h2>
+    <div class="action-modal-body" id="action-modal-body"></div>
+    <div class="modal-actions">
+      <button class="btn-save" onclick="closeActionModal()">Zamknij</button>
+    </div>
+  </div>
+</div>
+
+<!-- OKNO EDYCJI WSZYSTKIEGO -->
+<div class="modal-overlay hidden" id="edit-modal">
+  <div class="modal-box">
+    <h2>Edytuj wszystko</h2>
+
+    <div class="modal-section-title">Ekran główny i karta</div>
+    <div class="form-group">
+      <label>Nagłówek listy</label>
+      <input type="text" id="inp-docs-title">
+    </div>
+    <div class="form-group">
+      <label>Napis na niebieskiej karcie</label>
+      <input type="text" id="inp-blue-card-title">
+    </div>
+    <div class="form-group">
+      <label>Tytuł w nagłówku karty</label>
+      <input type="text" id="inp-header-title">
+    </div>
+    <div class="form-group">
+      <label>Napis obok godła (linia 1)</label>
+      <input type="text" id="inp-emblem-line-1">
+    </div>
+    <div class="form-group">
+      <label>Napis obok godła (linia 2)</label>
+      <input type="text" id="inp-emblem-line-2">
+    </div>
+
+    <div class="modal-section-title">Zdjęcie, flaga i godło</div>
+    <div class="form-group">
+      <label>Zdjęcie profilowe (opcjonalnie)</label>
+      <input type="file" id="inp-photo" accept="image/*">
+    </div>
+    <div class="form-group">
+      <label>Zdjęcie lub wklejenie w godło (opcjonalnie)</label>
+      <div class="paste-zone" id="crest-paste-zone" tabindex="0">
+        <input type="file" id="inp-crest-photo" accept="image/*">
+        <div class="paste-zone-hint" id="crest-paste-status">
+          Możesz wybrać plik albo nacisnąć <strong>Ctrl + V</strong> (lub Cmd + V), aby wkleić skopiowany obraz bezpośrednio w godło.
+        </div>
+        <button type="button" class="btn-mini-clear" onclick="clearCrestPhoto()">Usuń zdjęcie z godła</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Kolor górnego pasa flagi</label>
+      <input type="color" id="inp-flag-top" value="#ffffff">
+    </div>
+    <div class="form-group">
+      <label>Kolor dolnego pasa flagi</label>
+      <input type="color" id="inp-flag-bottom" value="#dc143c">
+    </div>
+    <div class="form-group">
+      <label>Symbol na małej karcie w skrótach</label>
+      <input type="text" id="inp-crest-symbol">
+    </div>
+
+    <div class="modal-section-title">Główne wartości na karcie</div>
+    <div class="form-group">
+      <label>Wartość 1</label>
+      <input type="text" id="inp-name">
+    </div>
+    <div class="form-group">
+      <label>Wartość 2</label>
+      <input type="text" id="inp-surname">
+    </div>
+    <div class="form-group">
+      <label>Wartość 3</label>
+      <input type="text" id="inp-group">
+    </div>
+    <div class="form-group">
+      <label>Wartość 4</label>
+      <input type="text" id="inp-date">
+    </div>
+
+    <div class="modal-section-title">Główne etykiety na karcie</div>
+    <div class="form-group">
+      <label>Etykieta 1</label>
+      <input type="text" id="inp-lbl-name">
+    </div>
+    <div class="form-group">
+      <label>Etykieta 2</label>
+      <input type="text" id="inp-lbl-surname">
+    </div>
+    <div class="form-group">
+      <label>Etykieta 3</label>
+      <input type="text" id="inp-lbl-group">
+    </div>
+    <div class="form-group">
+      <label>Etykieta 4</label>
+      <input type="text" id="inp-lbl-date">
+    </div>
+
+    <div class="modal-section-title">Przyciski szybkich akcji</div>
+    <div class="form-group">
+      <label>Przycisk 1</label>
+      <input type="text" id="inp-act-1">
+    </div>
+    <div class="form-group">
+      <label>Przycisk 2</label>
+      <input type="text" id="inp-act-2">
+    </div>
+    <div class="form-group">
+      <label>Przycisk 3</label>
+      <input type="text" id="inp-act-3">
+    </div>
+    <div class="form-group">
+      <label>Przycisk 4</label>
+      <input type="text" id="inp-act-4">
+    </div>
+
+    <div class="modal-section-title">Status, numer i dodatkowe informacje</div>
+    <div class="form-group">
+      <label>Tekst statusu</label>
+      <input type="text" id="inp-status">
+    </div>
+    <div class="form-group">
+      <label>Etykieta numeru</label>
+      <input type="text" id="inp-lbl-serial">
+    </div>
+    <div class="form-group">
+      <label>Numer identyfikacyjny</label>
+      <input type="text" id="inp-serial">
+    </div>
+    <div class="form-group">
+      <label>Nagłówek dodatkowych informacji</label>
+      <input type="text" id="inp-accordion-title">
+    </div>
+    <div class="form-group">
+      <label>Dodatkowe 1 — etykieta</label>
+      <input type="text" id="inp-b1-lbl">
+    </div>
+    <div class="form-group">
+      <label>Dodatkowe 1 — wartość</label>
+      <input type="text" id="inp-b1-val">
+    </div>
+    <div class="form-group">
+      <label>Dodatkowe 2 — etykieta</label>
+      <input type="text" id="inp-b2-lbl">
+    </div>
+    <div class="form-group">
+      <label>Dodatkowe 2 — wartość</label>
+      <input type="text" id="inp-b2-val">
+    </div>
+    <div class="form-group">
+      <label>Dodatkowe 3 — etykieta</label>
+      <input type="text" id="inp-b3-lbl">
+    </div>
+    <div class="form-group">
+      <label>Dodatkowe 3 — wartość</label>
+      <input type="text" id="inp-b3-val">
+    </div>
+    <div class="form-group">
+      <label>Dodatkowe 4 — etykieta</label>
+      <input type="text" id="inp-b4-lbl">
+    </div>
+    <div class="form-group">
+      <label>Dodatkowe 4 — wartość</label>
+      <input type="text" id="inp-b4-val">
+    </div>
+    <div class="form-group">
+      <label>Dodatkowe 5 — etykieta</label>
+      <input type="text" id="inp-b5-lbl">
+    </div>
+    <div class="form-group">
+      <label>Dodatkowe 5 — wartość</label>
+      <input type="text" id="inp-b5-val">
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Anuluj</button>
+      <button class="btn-save" onclick="saveData()">Zapisz zmiany</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = 'clubCardLayoutV21';
+
+  const defaultData = {
+    docsTitle: "Dokumenty",
+    blueCardTitle: "Karta",
+    headerTitle: "Karta",
+    emblemLine1: "Karta",
+    emblemLine2: "m3",
+    flagTop: "#ffffff",
+    flagBottom: "#dc143c",
+    crestSymbol: "✦",
+
+    name: "JAN",
+    surname: "KOWALSKI",
+    group: "SEKCJA WEB",
+    date: "15.09.2008",
+
+    lblName: "Imię (Imiona)",
+    lblSurname: "Nazwisko",
+    lblGroup: "Sekcja projektu",
+    lblDate: "Data dołączenia",
+
+    b1Lbl: "Oddział",
+    b1Val: "WARSZAWA",
+    b2Lbl: "Pracownia",
+    b2Val: "SALA 104",
+    b3Lbl: "Opiekun",
+    b3Val: "MGR A. NOWAK",
+    b4Lbl: "Ważna do",
+    b4Val: "30.06.2027",
+    b5Lbl: "Poziom uprawnień",
+    b5Val: "PEŁNY DOSTĘP",
+
+    act1: "Potwierdź\ndane",
+    act2: "Szczegóły\nkarty",
+    act3: "Zablokuj\nkartę",
+    act4: "Pozostałe\nskróty",
+
+    status: "Karta aktywna",
+    locked: false,
+    lblSerial: "Numer identyfikacyjny karty",
+    serial: "KLAB 84920",
+
+    accordionTitle: "Twoje dodatkowe dane",
+    photo: null,
+    crestPhoto: null
+  };
+
+  let currentData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { ...defaultData };
+  let pendingCrestPhoto = currentData.crestPhoto || null;
+
+  function setText(id, val) {
+    document.getElementById(id).textContent = val;
+  }
+
+  function setActiveNav(id) {
+    document.querySelectorAll('.bottom-nav .nav-item').forEach(el => el.classList.remove('active'));
+    if (id) document.getElementById(id).classList.add('active');
+  }
+
+  function showDocsView() {
+    document.getElementById('view-docs').classList.remove('hidden');
+    document.getElementById('view-card').classList.add('hidden');
+    setActiveNav('nav-docs');
+  }
+
+  function showCardView() {
+    document.getElementById('view-docs').classList.add('hidden');
+    document.getElementById('view-card').classList.remove('hidden');
+    setActiveNav('nav-services');
+  }
+
+  function renderCrestGraphic() {
+    const imgEl = document.getElementById('crest-user-img');
+    if (currentData.crestPhoto) {
+      imgEl.setAttribute('href', currentData.crestPhoto);
+      imgEl.style.display = 'block';
+    } else {
+      imgEl.setAttribute('href', '');
+      imgEl.style.display = 'none';
+    }
+  }
+
+  function renderEmblemTitle() {
+    const container = document.getElementById('disp-emblem-title');
+    container.innerHTML = `<span>${currentData.emblemLine1}</span><span>${currentData.emblemLine2}</span>`;
+  }
+
+  function updateCrestPasteStatus() {
+    const statusEl = document.getElementById('crest-paste-status');
+    if (pendingCrestPhoto) {
+      statusEl.innerHTML = 'Wklejono / wybrano obraz do godła. Kliknij <strong>Zapisz zmiany</strong>, aby zatwierdzić.';
+    } else {
+      statusEl.innerHTML = 'Możesz wybrać plik albo nacisnąć <strong>Ctrl + V</strong> (lub Cmd + V), aby wkleić skopiowany obraz bezpośrednio w godło.';
+    }
+  }
+
+  function triggerCrestUpload() {
+    openModal();
+    setTimeout(() => {
+      document.getElementById('inp-crest-photo').click();
+    }, 50);
+  }
+
+  function clearCrestPhoto() {
+    pendingCrestPhoto = null;
+    currentData.crestPhoto = null;
+    document.getElementById('inp-crest-photo').value = '';
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(currentData));
+    renderCrestGraphic();
+    updateCrestPasteStatus();
+  }
+
+  function readImageFile(file, callback) {
+    if (!file || !file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      callback(e.target.result);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  document.getElementById('inp-crest-photo').addEventListener('change', function(e) {
+    if (e.target.files && e.target.files[0]) {
+      readImageFile(e.target.files[0], (dataUrl) => {
+        pendingCrestPhoto = dataUrl;
+        updateCrestPasteStatus();
+      });
+    }
+  });
+
+  document.addEventListener('paste', function(e) {
+    const items = e.clipboardData && e.clipboardData.items;
+    if (!items) return;
+
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.startsWith('image/')) {
+        const blob = items[i].getAsFile();
+        readImageFile(blob, (dataUrl) => {
+          const modalOpen = !document.getElementById('edit-modal').classList.contains('hidden');
+          if (modalOpen) {
+            pendingCrestPhoto = dataUrl;
+            updateCrestPasteStatus();
+          } else {
+            currentData.crestPhoto = dataUrl;
+            pendingCrestPhoto = dataUrl;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(currentData));
+            renderCrestGraphic();
+          }
+        });
+        break;
+      }
+    }
+  });
+
+  function renderStatus() {
+    const banner = document.getElementById('status-banner');
+    const dot = document.getElementById('status-dot');
+    const txt = document.getElementById('disp-status');
+
+    if (currentData.locked) {
+      banner.classList.add('locked');
+      dot.innerHTML = '!';
+      txt.textContent = 'Karta tymczasowo zablokowana';
+    } else {
+      banner.classList.remove('locked');
+      dot.innerHTML = '✓';
+      txt.textContent = currentData.status;
+    }
+  }
+
+  function syncQuickFourCols() {
+    setText('qlbl-1', currentData.b1Lbl);
+    setText('qlbl-2', currentData.b2Lbl);
+    setText('qlbl-3', currentData.b3Lbl);
+    setText('qlbl-4', currentData.b4Lbl);
+
+    document.getElementById('quick-col-1').value = currentData.b1Val;
+    document.getElementById('quick-col-2').value = currentData.b2Val;
+    document.getElementById('quick-col-3').value = currentData.b3Val;
+    document.getElementById('quick-col-4').value = currentData.b4Val;
+  }
+
+  function handleQuickColInput(colIndex, val) {
+    if (colIndex === 1) {
+      currentData.b1Val = val;
+      setText('disp-det-b1-val', val);
+    } else if (colIndex === 2) {
+      currentData.b2Val = val;
+      setText('disp-det-b2-val', val);
+    } else if (colIndex === 3) {
+      currentData.b3Val = val;
+      setText('disp-det-b3-val', val);
+    } else if (colIndex === 4) {
+      currentData.b4Val = val;
+      setText('disp-det-b4-val', val);
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(currentData));
+  }
+
+  function renderCard() {
+    setText('disp-docs-title', currentData.docsTitle);
+    setText('disp-blue-card-title', currentData.blueCardTitle);
+    setText('disp-header-title', currentData.headerTitle);
+    setText('disp-mini-card-symbol', currentData.crestSymbol);
+
+    setText('disp-name', currentData.name);
+    setText('disp-surname', currentData.surname);
+    setText('disp-group', currentData.group);
+    setText('disp-date', currentData.date);
+
+    setText('disp-lbl-name', currentData.lblName);
+    setText('disp-lbl-surname', currentData.lblSurname);
+    setText('disp-lbl-group', currentData.lblGroup);
+    setText('disp-lbl-date', currentData.lblDate);
+
+    setText('disp-det-b1-lbl', currentData.b1Lbl);
+    setText('disp-det-b1-val', currentData.b1Val);
+    setText('disp-det-b2-lbl', currentData.b2Lbl);
+    setText('disp-det-b2-val', currentData.b2Val);
+    setText('disp-det-b3-lbl', currentData.b3Lbl);
+    setText('disp-det-b3-val', currentData.b3Val);
+    setText('disp-det-b4-lbl', currentData.b4Lbl);
+    setText('disp-det-b4-val', currentData.b4Val);
+    setText('disp-det-b5-lbl', currentData.b5Lbl);
+    setText('disp-det-b5-val', currentData.b5Val);
+
+    syncQuickFourCols();
+
+    setText('disp-act-1', currentData.act1);
+    setText('disp-act-2', currentData.act2);
+    setText('disp-act-3', currentData.act3);
+    setText('disp-act-4', currentData.act4);
+
+    setText('disp-lbl-serial', currentData.lblSerial);
+    setText('disp-serial', currentData.serial);
+    setText('disp-accordion-title', currentData.accordionTitle);
+
+    renderStatus();
+    renderCrestGraphic();
+    renderEmblemTitle();
+
+    const avatarBox = document.getElementById('avatar-container');
+    if (currentData.photo) {
+      avatarBox.innerHTML = `<img src="${currentData.photo}" alt="Zdjęcie">`;
+    } else {
+      avatarBox.innerHTML = `👤`;
+    }
+  }
+
+  const flagCanvas = document.getElementById('waving-flag');
+  const flagCtx = flagCanvas.getContext('2d');
+  let wavePhase = 0;
+
+  function drawWavingFlag() {
+    const cw = flagCanvas.width;
+    const ch = flagCanvas.height;
+    flagCtx.clearRect(0, 0, cw, ch);
+
+    const padX = 4;
+    const padY = 8;
+    const fw = cw - padX * 2;
+    const fh = ch - padY * 2;
+    const radius = 10;
+
+    const getWaveY = (x) => {
+      const progress = x / fw;
+      const amp = 1.8 + 2.6 * progress;
+      return Math.sin(progress * 5.2 - wavePhase) * amp;
+    };
+
+    flagCtx.save();
+    flagCtx.beginPath();
+
+    for (let x = 0; x <= fw; x += 2) {
+      let y = padY + getWaveY(x);
+      if (x < radius) {
+        y += radius - Math.sqrt(Math.max(0, radius * radius - Math.pow(radius - x, 2)));
+      } else if (x > fw - radius) {
+        const dx = x - (fw - radius);
+        y += radius - Math.sqrt(Math.max(0, radius * radius - dx * dx));
+      }
+      if (x === 0) flagCtx.moveTo(padX + x, y);
+      else flagCtx.lineTo(padX + x, y);
+    }
+
+    for (let x = fw; x >= 0; x -= 2) {
+      let y = padY + fh + getWaveY(x);
+      if (x > fw - radius) {
+        const dx = x - (fw - radius);
+        y -= radius - Math.sqrt(Math.max(0, radius * radius - dx * dx));
+      } else if (x < radius) {
+        y -= radius - Math.sqrt(Math.max(0, radius * radius - Math.pow(radius - x, 2)));
+      }
+      flagCtx.lineTo(padX + x, y);
+    }
+
+    flagCtx.closePath();
+    flagCtx.clip();
+
+    const slice = 2;
+    for (let x = 0; x < fw; x += slice) {
+      const wy = getWaveY(x);
+      const progress = x / fw;
+      const shade = Math.cos(progress * 5.2 - wavePhase) * 0.08;
+
+      flagCtx.fillStyle = currentData.flagTop;
+      flagCtx.fillRect(padX + x, padY + wy - 10, slice + 1, fh / 2 + 10);
+
+      flagCtx.fillStyle = currentData.flagBottom;
+      flagCtx.fillRect(padX + x, padY + fh / 2 + wy, slice + 1, fh / 2 + 10);
+
+      if (shade > 0) {
+        flagCtx.fillStyle = `rgba(255, 255, 255, ${shade})`;
+      } else {
+        flagCtx.fillStyle = `rgba(0, 0, 0, ${Math.abs(shade)})`;
+      }
+      flagCtx.fillRect(padX + x, padY + wy - 10, slice + 1, fh + 20);
+    }
+
+    flagCtx.restore();
+
+    wavePhase += 0.07;
+    requestAnimationFrame(drawWavingFlag);
+  }
+  drawWavingFlag();
+
+  function showActionModal(title, htmlBody) {
+    document.getElementById('action-modal-title').textContent = title;
+    document.getElementById('action-modal-body').innerHTML = htmlBody;
+    document.getElementById('action-modal').classList.remove('hidden');
+  }
+
+  function closeActionModal() {
+    document.getElementById('action-modal').classList.add('hidden');
+  }
+
+  function openVerifyModal() {
+    const code = Math.floor(100000 + Math.random() * 900000);
+    showActionModal(
+      'Potwierdzenie danych',
+      `<p>Jednorazowy kod weryfikacyjny dla karty <strong>${currentData.serial}</strong>:</p>
+       <div class="verify-code-box">${code}</div>
+       <p style="font-size:12px; color:#9ca3af;">Użytkownik: ${currentData.name} ${currentData.surname}</p>`
+    );
+  }
+
+  function openCardInfoModal() {
+    showActionModal(
+      'Szczegóły karty',
+      `<p><strong>Właściciel:</strong> ${currentData.name} ${currentData.surname}</p>
+       <p><strong>${currentData.lblGroup}:</strong> ${currentData.group}</p>
+       <p><strong>${currentData.b1Lbl}:</strong> ${currentData.b1Val}</p>
+       <p><strong>${currentData.b2Lbl}:</strong> ${currentData.b2Val}</p>
+       <p><strong>${currentData.b3Lbl}:</strong> ${currentData.b3Val}</p>
+       <p><strong>${currentData.b4Lbl}:</strong> ${currentData.b4Val}</p>
+       <p><strong>${currentData.b5Lbl}:</strong> ${currentData.b5Val}</p>`
+    );
+  }
+
+  function toggleCardLock() {
+    currentData.locked = !currentData.locked;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(currentData));
+    renderStatus();
+    showActionModal(
+      currentData.locked ? 'Karta zablokowana' : 'Karta odblokowana',
+      currentData.locked
+        ? '<p>Status karty zmieniono na <strong>tymczasowo zablokowaną</strong>.</p>'
+        : '<p>Karta jest ponownie <strong>aktywna</strong>.</p>'
+    );
+  }
+
+  function openShortcutsModal() {
+    showActionModal(
+      'Pozostałe skróty',
+      `<button class="shortcut-btn" onclick="closeActionModal(); openModal();">
+         <span>Edytuj dane i napisy</span>
+         <span>❯</span>
+       </button>
+       <button class="shortcut-btn" onclick="copyId(); closeActionModal();">
+         <span>Kopiuj numer (${currentData.serial})</span>
+         <span>❯</span>
+       </button>
+       <button class="shortcut-btn" onclick="closeActionModal(); resetData();">
+         <span>Przywróć ustawienia domyślne</span>
+         <span>❯</span>
+       </button>`
+    );
+  }
+
+  function openModal() {
+    pendingCrestPhoto = currentData.crestPhoto || null;
+    updateCrestPasteStatus();
+
+    document.getElementById('inp-docs-title').value = currentData.docsTitle;
+    document.getElementById('inp-blue-card-title').value = currentData.blueCardTitle;
+    document.getElementById('inp-header-title').value = currentData.headerTitle;
+    document.getElementById('inp-emblem-line-1').value = currentData.emblemLine1;
+    document.getElementById('inp-emblem-line-2').value = currentData.emblemLine2;
+
+    document.getElementById('inp-flag-top').value = currentData.flagTop;
+    document.getElementById('inp-flag-bottom').value = currentData.flagBottom;
+    document.getElementById('inp-crest-symbol').value = currentData.crestSymbol;
+
+    document.getElementById('inp-name').value = currentData.name;
+    document.getElementById('inp-surname').value = currentData.surname;
+    document.getElementById('inp-group').value = currentData.group;
+    document.getElementById('inp-date').value = currentData.date;
+
+    document.getElementById('inp-lbl-name').value = currentData.lblName;
+    document.getElementById('inp-lbl-surname').value = currentData.lblSurname;
+    document.getElementById('inp-lbl-group').value = currentData.lblGroup;
+    document.getElementById('inp-lbl-date').value = currentData.lblDate;
+
+    document.getElementById('inp-b1-lbl').value = currentData.b1Lbl;
+    document.getElementById('inp-b1-val').value = currentData.b1Val;
+    document.getElementById('inp-b2-lbl').value = currentData.b2Lbl;
+    document.getElementById('inp-b2-val').value = currentData.b2Val;
+    document.getElementById('inp-b3-lbl').value = currentData.b3Lbl;
+    document.getElementById('inp-b3-val').value = currentData.b3Val;
+    document.getElementById('inp-b4-lbl').value = currentData.b4Lbl;
+    document.getElementById('inp-b4-val').value = currentData.b4Val;
+    document.getElementById('inp-b5-lbl').value = currentData.b5Lbl;
+    document.getElementById('inp-b5-val').value = currentData.b5Val;
+
+    document.getElementById('inp-act-1').value = currentData.act1;
+    document.getElementById('inp-act-2').value = currentData.act2;
+    document.getElementById('inp-act-3').value = currentData.act3;
+    document.getElementById('inp-act-4').value = currentData.act4;
+
+    document.getElementById('inp-status').value = currentData.status;
+    document.getElementById('inp-lbl-serial').value = currentData.lblSerial;
+    document.getElementById('inp-serial').value = currentData.serial;
+    document.getElementById('inp-accordion-title').value = currentData.accordionTitle;
+
+    document.getElementById('inp-photo').value = "";
+    document.getElementById('inp-crest-photo').value = "";
+    document.getElementById('edit-modal').classList.remove('hidden');
+  }
+
+  function closeModal() {
+    document.getElementById('edit-modal').classList.add('hidden');
+  }
+
+  function finalizeSave() {
+    currentData.crestPhoto = pendingCrestPhoto;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(currentData));
+    renderCard();
+    closeModal();
+  }
+
+  function saveData() {
+    currentData.docsTitle = document.getElementById('inp-docs-title').value;
+    currentData.blueCardTitle = document.getElementById('inp-blue-card-title').value;
+    currentData.headerTitle = document.getElementById('inp-header-title').value;
+    currentData.emblemLine1 = document.getElementById('inp-emblem-line-1').value;
+    currentData.emblemLine2 = document.getElementById('inp-emblem-line-2').value;
+
+    currentData.flagTop = document.getElementById('inp-flag-top').value;
+    currentData.flagBottom = document.getElementById('inp-flag-bottom').value;
+    currentData.crestSymbol = document.getElementById('inp-crest-symbol').value;
+
+    currentData.name = document.getElementById('inp-name').value;
+    currentData.surname = document.getElementById('inp-surname').value;
+    currentData.group = document.getElementById('inp-group').value;
+    currentData.date = document.getElementById('inp-date').value;
+
+    currentData.lblName = document.getElementById('inp-lbl-name').value;
+    currentData.lblSurname = document.getElementById('inp-lbl-surname').value;
+    currentData.lblGroup = document.getElementById('inp-lbl-group').value;
+    currentData.lblDate = document.getElementById('inp-lbl-date').value;
+
+    currentData.b1Lbl = document.getElementById('inp-b1-lbl').value;
+    currentData.b1Val = document.getElementById('inp-b1-val').value;
+    currentData.b2Lbl = document.getElementById('inp-b2-lbl').value;
+    currentData.b2Val = document.getElementById('inp-b2-val').value;
+    currentData.b3Lbl = document.getElementById('inp-b3-lbl').value;
+    currentData.b3Val = document.getElementById('inp-b3-val').value;
+    currentData.b4Lbl = document.getElementById('inp-b4-lbl').value;
+    currentData.b4Val = document.getElementById('inp-b4-val').value;
+    currentData.b5Lbl = document.getElementById('inp-b5-lbl').value;
+    currentData.b5Val = document.getElementById('inp-b5-val').value;
+
+    currentData.act1 = document.getElementById('inp-act-1').value;
+    currentData.act2 = document.getElementById('inp-act-2').value;
+    currentData.act3 = document.getElementById('inp-act-3').value;
+    currentData.act4 = document.getElementById('inp-act-4').value;
+
+    currentData.status = document.getElementById('inp-status').value;
+    currentData.lblSerial = document.getElementById('inp-lbl-serial').value;
+    currentData.serial = document.getElementById('inp-serial').value;
+    currentData.accordionTitle = document.getElementById('inp-accordion-title').value;
+
+    const photoInput = document.getElementById('inp-photo');
+    const crestPhotoInput = document.getElementById('inp-crest-photo');
+
+    const processCrestThenFinish = () => {
+      if (crestPhotoInput.files && crestPhotoInput.files[0]) {
+        readImageFile(crestPhotoInput.files[0], (dataUrl) => {
+          pendingCrestPhoto = dataUrl;
+          finalizeSave();
+        });
+      } else {
+        finalizeSave();
+      }
+    };
+
+    if (photoInput.files && photoInput.files[0]) {
+      readImageFile(photoInput.files[0], (dataUrl) => {
+        currentData.photo = dataUrl;
+        processCrestThenFinish();
+      });
+    } else {
+      processCrestThenFinish();
+    }
+  }
+
+  function resetData() {
+    if (confirm('Przywrócić domyślne dane i napisy?')) {
+      localStorage.removeItem(STORAGE_KEY);
+      currentData = { ...defaultData };
+      pendingCrestPhoto = null;
+      renderCard();
+    }
+  }
+
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('clock').textContent = `Czas: ${now.toLocaleTimeString('pl-PL')} ${now.toLocaleDateString('pl-PL')}`;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  function copyId() {
+    const idText = document.getElementById('disp-serial').textContent;
+    navigator.clipboard.writeText(idText).then(() => {
+      const btn = document.getElementById('copy-btn');
+      btn.textContent = 'Skopiowano!';
+      setTimeout(() => btn.textContent = 'Kopiuj', 2000);
+    });
+  }
+
+  function toggleDetails() {
+    const panel = document.getElementById('details-panel');
+    const arrow = document.getElementById('arrow');
+    panel.classList.toggle('hidden');
+    arrow.innerHTML = panel.classList.contains('hidden') ? '▼' : '▲';
+  }
+
+  renderCard();
+</script>
+
+</body>
+</html>
